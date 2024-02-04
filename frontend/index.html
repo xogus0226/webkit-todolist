@@ -176,6 +176,17 @@
             reRender();
         }
 
+        function update(no, newTitle) {
+            for (let i = 0; i < todoList.length; i++) {
+                if (todoList[i].no !== no) {
+                    continue;
+                }
+
+                todoList[i].title = newTitle;
+                localStorage.setItem("todoListData", JSON.stringify({ noCnt: cnt, todoList: todoList }));
+            }
+        }
+
         function edit(no) {
             const newTitle = prompt("할 일을 수정해주세요.");
 
@@ -188,14 +199,15 @@
                 return;
             }
 
-            for (let i = 0; i < todoList.length; i++) {
-                if (todoList[i].no !== no) {
-                    continue;
-                }
+            update(no, newTitle);
+            // for (let i = 0; i < todoList.length; i++) {
+            //     if (todoList[i].no !== no) {
+            //         continue;
+            //     }
 
-                todoList[i].title = newTitle;
-                localStorage.setItem("todoListData", JSON.stringify({ noCnt: cnt, todoList: todoList }));
-            }
+            //     todoList[i].title = newTitle;
+            //     localStorage.setItem("todoListData", JSON.stringify({ noCnt: cnt, todoList: todoList }));
+            // }
 
             reRender();
         }
@@ -221,8 +233,18 @@
         }
 
         $("#saveBtn").on("click", insert);
+        $("#newTitle").on("keyup", function (event) { if (event.key === "Enter") { insert(); } });
         $("#initBtn").on("click", init);
         $("#toDoList").on("click", handleTodoWholeEvent);
+        $("#toDoList").on("keyup", function (event) {
+            if (event.key === "Enter") {
+                let no = getNo(event.target.id);
+                let newValue = event.target.value;
+
+                update(no, newValue);
+                reRender();
+            }
+        });
 
         reRender();
     </script>
